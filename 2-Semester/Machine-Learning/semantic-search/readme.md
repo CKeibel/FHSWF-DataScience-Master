@@ -6,3 +6,5 @@ semantic_sentences.ipynb
 - [Milvus Vector Database](https://milvus.io/docs/install_standalone-docker.md)
 - [Universal Sentence Encoder](https://www.tensorflow.org/hub/tutorials/semantic_similarity_with_tf_hub_universal_encoder)
 - [Sentence Transformer Quantization](https://www.philschmid.de/optimize-sentence-transformers) - for better latency
+- [Sentence Transformers](https://www.sbert.net/examples/applications/information-retrieval/README.html)
+- [Retrieval Transformer](http://jalammar.github.io/illustrated-retrieval-transformer/)
