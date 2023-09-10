@@ -1,19 +1,25 @@
-from dataclasses import dataclass, field
-from datetime import datetime
+from neomodel import (StructuredNode, 
+                      RelationshipTo, 
+                      RelationshipFrom, 
+                      StringProperty, 
+                      BooleanProperty, 
+                      ArrayProperty,
+                      DateTimeProperty,
+                      IntegerProperty)
 
-@dataclass
-class Tag:
-    sensors: list
-    address: str
-    name: str
-    last_contact: str | datetime
-    online: bool
+class Tag(StructuredNode):
+    # address or name as 'id'
+    address = StringProperty(unique_index=True, required=True)
+    sensors = ArrayProperty()
+    name = StringProperty()
+    last_contact = StringProperty() # TODO: date
+    online = BooleanProperty
+    gateway = RelationshipFrom('Gateway', 'CONNECTED_TO')
 
-@dataclass
-class Gateway:
-    network_segment: int
-    last_contact: str
-    online: bool
-    ip_address: str
-    id: str # id is keyword in python, maybe needs a mapping
-    tags: list[Tag] = field(default_factory = list)
+class Gateway(StructuredNode):
+    gid = StringProperty(unique_index=True, required=True)
+    network_segment = IntegerProperty()
+    last_contact =  StringProperty() # TODO: date
+    online = BooleanProperty()
+    ip_address = StringProperty()
+    tag = RelationshipTo('Tag', 'CONNECTED_TO') # cardiality=ZeroOrMore (default)
