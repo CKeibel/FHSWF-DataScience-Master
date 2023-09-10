@@ -12,7 +12,7 @@ import requests
 import json
 import logging
 
-# logging.basicConfig(filename='logging.log', encoding='utf-8', level=logging.WARNING)
+logging.basicConfig(encoding='utf-8', level=logging.INFO)
 
 
 # status code decorator
@@ -100,15 +100,21 @@ def get_sensor_data(api: str) -> tuple[AcclerationSensor, TemperatureSensor, Hum
 def fetch_and_persist() -> None:
     """  Fetching data """
 
+    logger = logging.getLogger(__name__)
+
     config.DATABASE_URL = "bolt://neo4j:password@localhost:7687"
     
     # api for fetchin gateway data
     gateway_api = requests.get("http://localhost:8080/api/v1/structure/gateway/list")
 
     if gateway_api.status_code == 200: # TODO: maybe try-except
-        for g in json.loads(gateway_api.text)["gateways"]:
+        g_response = json.loads(gateway_api.text)["gateways"]
+        for g_idx, g in enumerate(g_response):
+            
+            logger.info(f'GATEWAY ({g_idx+1}/ {len(g_response)}): {g["id"]}')
+            
             gateway: Gateway | None = Gateway.nodes.get_or_none(gid=g["id"])
-            if gateway is None:
+            if gateway is None: # Gateway already exists
                 # Create new gateway
                 gateway: Gateway = Gateway(
                     gid=g["id"],
@@ -127,9 +133,13 @@ def fetch_and_persist() -> None:
             # Fetch tags for gateway
             tag_api = requests.get(f"http://localhost:8080/api/v1/structure/tag/list/{g['id']}")
             if tag_api.status_code == 200: # TODO: maybe try-except
-                for t in json.loads(tag_api.text):
+                t_response = json.loads(tag_api.text)
+                for t_idx, t in enumerate(t_response):
+
+                    logger.info(f'### TAG ({t_idx+1}/{len(t_response)}): {t["address"]}')
+
                     tag: Tag | None = Tag.nodes.get_or_none(address=t["address"])
-                    if tag is None:
+                    if tag is None: # Tag already exists
                         # Add tag to gateway tag-list
                         tag = Tag(
                             address=t["address"],
