@@ -1,5 +1,8 @@
 # Gateway Servive Swagger 
-*[Swagger](http://localhost:8080/swagger/index.html)
+- [Swagger](http://localhost:8080/swagger/index.html)
 
 # Neo4j
-*[UI](http://localhost:7474/)
+- [UI](http://localhost:7474/)
+
+# Model
+![db schema](./dbschema.draw.io.png)
