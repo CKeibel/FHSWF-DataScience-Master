@@ -5,4 +5,4 @@
 - [UI](http://localhost:7474/)
 
 # Model
-![db schema](./dbschema.draw.io.png)
+![db schema](dbschema.drawio.png)
